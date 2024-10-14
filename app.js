@@ -1,5 +1,7 @@
-const logMessage = require("./logger");
+import {logMessage} from "./logger.js";
 
-logMessage("Test");
-logMessage("Test2");
-logMessage("Test3");
+logMessage("Init app.js");
+logMessage("Init logger.js");
+logMessage("Init loop.js");
+
+logMessage("Init log.txt");

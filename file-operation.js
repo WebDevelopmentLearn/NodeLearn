@@ -9,7 +9,7 @@ console.log("File name: ", FILENAME);
 async function createFile() {
     try {
         await fsp.writeFile(FILENAME, "Node.js is awesome!");
-        console.log("Файл 'info.txt' успешно создан");
+        console.log(`Файл ${FILENAME} успешно создан`);
     } catch (err) {
         console.error("Ошибка при создании файла 'info.txt': ", err);
     }
@@ -20,7 +20,7 @@ async function readFile() {
         const data = await fsp.readFile(FILENAME, "utf-8");
         console.log(data);
     } catch (err) {
-        console.error("Ошибка при чтении файла 'info.txt': ", err);
+        console.error(`Ошибка при чтении файла ${FILENAME}: `, err);
     }
 }
 

@@ -29,7 +29,12 @@ async function readFile() {
 //     readFile();
 // });
 
-createFile();
-readFile();
-
+// async function main() {
+//     await createFile();
+//     await readFile();
+// }
+//
+// main()
+await createFile();
+await readFile();
 

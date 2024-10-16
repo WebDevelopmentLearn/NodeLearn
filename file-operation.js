@@ -25,8 +25,11 @@ async function readFile() {
 }
 
 //TODO: По какой-то причине readFile вызывался раньше createFile (Хотя файл создавался без проблем), поэтому так
-createFile().then(r => {
-    readFile();
-});
+// createFile().then(r => {
+//     readFile();
+// });
+
+createFile();
+readFile();
 
 

@@ -1,14 +1,15 @@
-import {promises as fsp} from "fs";
+import { promises as fsp } from "fs";
 
-async function writeToLogFile (dataFromFile) {
+
+async function writeToLogFile(dataFromFile) {
     try {
         await fsp.appendFile("log.txt", dataFromFile, "utf-8");
     } catch (err) {
-        console.error(err);
+        console.error('Ошибка при записи в файл:', err);
     }
 }
 
-export const logMessage = (message) => {
+export const logMessage = async (message) => {
     const date = new Date();
     const formattedDateTime = date.toLocaleString('ru-RU', {
         year: 'numeric',
@@ -18,19 +19,12 @@ export const logMessage = (message) => {
         minute: '2-digit',
         second: '2-digit'
     });
-    // fs.appendFile("log.txt", `[${formattedDateTime}] | ${message} \n`, (err) => {
-    //     if (err) {
-    //         console.error(err);
-    //         return;
-    //     }
-    //     console.log("Файл изменен");
-    // })
-    writeToLogFile(`[${formattedDateTime}] | ${message} \n`).then(() => {
-        // console.log("Test");
-    }).catch(() => {
-
-    });
-
-}
+    try {
+        await writeToLogFile(`[${formattedDateTime}] | ${message} \n`);
+        console.log("Файл изменен");
+    } catch (err) {
+        console.error('Ошибка при записи сообщения:', err);
+    }
+};
 
 

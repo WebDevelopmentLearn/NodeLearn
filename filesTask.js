@@ -19,5 +19,11 @@ async function readFile() {
 }
 
 
-createFile();
-readFile();
+
+async function runTask2() {
+    await createFile();
+    await readFile();
+}
+
+
+runTask2();

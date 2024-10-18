@@ -34,9 +34,14 @@ async function deleteFolder() {
     }
 }
 
-//Создание папки
-createFolder();
 
-//Удаление папки через 5 секунд
-setTimeout(deleteFolder, 5000);
+async function runTask1() {
+    //Создание папки
+    await createFolder();
+
+    //Удаление папки через 5 секунд
+    await setTimeout(deleteFolder, 5000);
+}
+
+runTask1();
 

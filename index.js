@@ -12,21 +12,6 @@ app.get("/", (_, res) => {
     res.send("Hello There!");
 });
 
-
-app.post("/users", (req, res, next) => {
-    const {userId, username} = req.body;
-    if (userId && username) {
-        res.json({
-            userId: userId,
-            username: username
-        });
-    } else {
-        const err = new Error("Необходимы userId и username");
-        next(err);
-    }
-});
-
-
 app.get("/products", (req, res, next) => {
     const query = `SELECT * FROM products;`;
     connection.query(query, (err, results) => {

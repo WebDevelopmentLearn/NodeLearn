@@ -9,7 +9,7 @@ const createProductsTable = `
 `
 
 
-connection.execute(createProductsTable, (err, results) => {
+connection.query(createProductsTable, (err, results) => {
     if (err) {
         console.error('Error creating products table: ', err.stack);
         return;

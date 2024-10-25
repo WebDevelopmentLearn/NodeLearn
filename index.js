@@ -19,6 +19,7 @@ app.get("/products", (req, res, next) => {
             // console.error("Error fetching products: ", err.stack);
             const err = new Error("Error fetching products");
             next(err);
+            return;
         }
         res.json(results);
     })
@@ -47,16 +48,20 @@ app.post("/products", (req, res, next) => {
         connection.query(query, [name, price], (err, results) => {
             if (err) {
                 // console.error("Error fetching products: ", err.stack);
-                const err = new Error("Error fetching products");
-                next(err);
+                const error = new Error("Error fetching products: " + err.message);
+                next(error);
+                return;
             }
-            res.status(200).json({
+            res.status(201).json({
                 message: "Продукт успешно добавлен"
             })
         })
 
     } else {
         const err = new Error("Необходимы name и price");
+        res.status(400).json({
+            message: "Необходимы name и price"
+        });
         next(err);
     }
 });
@@ -65,28 +70,12 @@ app.post("/products", (req, res, next) => {
 
 // Middleware для обработки ошибок
 app.use((err, req, res, next) => {
-    // res.status(err.status || 500); // Устанавливаем статус ответа
-    // res.json({
-    //     error: {
-    //         message: err.message
-    //     }
-    // });
     console.error(err.stack);
     res.status(500).json({
         message: "Internal Server Error",
         error: err.message
     })
 });
-
-
-app.post("/users", (req, res) => {
-    const {userId, username} = req.body;
-    res.json({
-        userId: userId,
-        username: username
-    });
-})
-
 
 app.listen(port, (error) => {
     error ? console.error("Error: ", error) : console.log(`Server running at: http://localhost:${port}`);

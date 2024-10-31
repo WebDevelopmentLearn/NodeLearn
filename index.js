@@ -17,8 +17,8 @@ app.get("/products", (req, res, next) => {
     connection.query(query, (err, results) => {
         if (err) {
             // console.error("Error fetching products: ", err.stack);
-            const err = new Error("Error fetching products");
-            next(err);
+            const error = new Error("Error fetching products");
+            next(error);
             return;
         }
         res.json(results);
@@ -48,7 +48,7 @@ app.post("/products", (req, res, next) => {
         connection.query(query, [name, price], (err, results) => {
             if (err) {
                 // console.error("Error fetching products: ", err.stack);
-                const error = new Error("Error fetching products: " + err.message);
+                const error = new Error("Error adding product: " + err.message);
                 next(error);
                 return;
             }

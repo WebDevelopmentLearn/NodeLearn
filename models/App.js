@@ -4,7 +4,7 @@ import sequelizeInstance from "../config/db.js";
 const App = sequelizeInstance.define(
     "App",
     {
-        appId: {
+        id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,

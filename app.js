@@ -39,16 +39,21 @@ fetch("http://localhost:3400/apps", {
 app.post("/apps", async (req, res) => {
     const {name, size} = req.body;
     try {
-        await App.create({
-            name: name,
-            size: size
-        });
+        const newApp = await App.create(
+            {
+                name,
+                size
+            }
+        );
         res.status(201).json({
-            message: `Приложение: ${name} с размером ${size} успешно добавлено`
+            message: `Приложение: ${name} с размером ${size} успешно добавлено`,
+            app: newApp
         });
-        console.log(`Приложение: ${name} с размером ${size} успешно добавлено`);
     } catch (error) {
         console.error("Error: ", error);
+        res.status(500).json({
+            message: "Failed to add app"
+        });
     }
 });
 

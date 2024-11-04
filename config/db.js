@@ -1,8 +1,8 @@
 import {Sequelize} from "sequelize";
-import {config as configObj} from "./config.js";
+import configData from "./config.json" assert {type: "json"};
 
 const env = process.env.NODE_ENV || 'development';
-const config = configObj[env];
+const config = configData[env];
 
 
 const sequelizeInstance = new Sequelize(

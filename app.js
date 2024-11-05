@@ -1,98 +1,242 @@
 import express from 'express';
 import "dotenv/config";
 import sequelizeInstance from "./config/db.js";
-import Book from "./models/book.js";
+import User from "./models/user.js";
+import bcrypt from "bcrypt";
+import {Op} from "sequelize";
+import cors from "cors";
+import {checkPasswordChange} from "./middleware/checkPasswordChange.js";
+import {checkUserRole} from "./middleware/checkUserRole.js";
 
 
 const app = express();
-const port = process.env.PORT || 4444;
+const PORT = process.env.PORT || 4444;
 
 app.use(express.json());
+app.use(cors());
+
+app.use((req, res, next) => {
+    req.user = {id: 1, role: "admin"};
+    next();
+
+})
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
 });
 
 
-app.get('/books', async (req, res, next) => {
+app.post("/register", async (req, res) => {
+    const {username, password, email} = req.body;
+    if (!username || !password || !email)  return res.status(401).send("Все данные должны быть заполнены");
+
     try {
-        const books = await Book.findAll();
-        res.status(200).json(books);
+        const registeredUser = await User.findOne({
+            where: {
+                [Op.or]: [
+                    { username: username },
+                    { email: email }
+                ]
+            }
+        });
+
+        if (registeredUser) {
+            return res.status(409).send("Пользователь с данным именем или электронной почтой уже зарегистрирован");
+
+        }
+
+        const salt = 10;
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const newUser = await User.create({
+            username: username,
+            password: hashedPassword,
+            email: email,
+            role: "user"
+        });
+        res.status(201).json({
+            message: "Пользователь успешно зарегистрирован",
+            newUser
+        });
     } catch (error) {
-        const errObj = new Error(error.message);
-        console.error("Error: ", errObj);
-        next(errObj);
+        res.status(500).send("Ошибка регистрации пользователя");
+        console.error("Error: ", error);
     }
 });
 
 
-app.post("/books", async (req, res, next) => {
-    const {title, author, year} = req.body;
+
+app.post("/login", async (req, res, next) => {
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).send("Необходимо ввести логин и пароль");
+
     try {
-        const newBook = await Book.create({
-            title: title,
-            author: author,
-            year: year
+        const user = await User.findOne({ where: { username } });
+        if (!user) return res.status(404).send("User not found");
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return res.status(401).send("Доступ запрещен: Неверный пароль");
+
+        // Если аутентификация успешна, добавляем пользователя в req
+        req.user = user;
+        next();
+    } catch (error) {
+        next(error);
+    }
+}, checkPasswordChange, (req, res) => {
+
+    res.send(`Добро пожаловать, ${req.user.username}`);
+});
+
+
+
+app.post("/change-password", async (req, res, next) => {
+    try {
+        const {newPassword} = req.body;
+        if(!newPassword) {
+            return res.status(401).send('New password must include password');
+        }
+        const user = await User.findByPk(req.user.id);
+        if(!user) {
+            return res.status(404).send('User not found');
+        }
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        const updatedData = {};
+        updatedData.password = hashedPassword;
+        updatedData.mustChangePassword = false;
+
+        await user.update(updatedData);
+        // user.password = hashedPassword;
+        // user.mustChangePassword = false;
+        res.send('User password changed successfully');
+        console.log(user);
+    } catch(error) {
+        console.error(error)
+        next(error);
+    }
+})
+
+app.get('/profile/:id', async (req, res) => {
+    const userId = parseInt(req.params.id);
+    try {
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).send("User not found");
+        res.json({
+            username: user.username,
+            email: user.email,
+            role: user.role,
+            mustChangePassword: user.mustChangePassword
         });
+    } catch (error) {
+        res.status(500).send("Ошибка при получении профиля пользователя");
+        console.error("Error: ", error);
+    }
+});
+
+app.post('/change-email', async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        const user = await User.findOne({
+            where: {
+                "email": email
+            }
+        });
+
+
+        if (!user) return res.status(404).send("User not found");
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) return res.status(401).send("Неверный пароль");
+
+        const updatedData = {};
+        if (email)  updatedData.email = email;
+
+        await user.update(updatedData);
 
         res.status(201).json({
-            message: `Книга с названием ${title} за авторством ${author} ${year} года выпуска успешно добавлена`,
-            book: newBook
+            message: `Данные успешно обновлены`,
+            updatedData: updatedData
         });
 
     } catch (error) {
-        const errObj = new Error(error.message);
-        console.error("Error: ", errObj);
-        next(errObj);
+        res.status(500).send("Ошибка при получении профиля пользователя");
+        console.error("Error: ", error);
     }
 });
 
 
-app.put("/books/:id", async(req, res, next) => {
-    const id = req.params.id;
-    const {title, author, year} = req.body;
+app.post('/delete-account', async(req,res, next) => {
+    if(!req.user.id) {
+        return res.status(401).send('User not authorized');
+    }
     try {
-        const targetBook = await Book.findByPk(id);
-        if (!targetBook) {
-            return res.status(404).json({ message: 'Book not found' });
+        const user = await User.findByPk(req.user.id);
+        if(!user) {
+            return res.status(404).send('User not found');
+        }
+        const {currentPassword} = req.body;
+        if(!currentPassword) {
+            return res.status(401).send('Must include current password');
+        }
+        console.log(user)
+        console.log(currentPassword)
+        const isPasswordTrue = await bcrypt.compare(currentPassword, user.password);
+        if(!isPasswordTrue) {
+            return res.status(403).send('Passwords must match. Access denied');
         }
 
-        const updatesData = {};
-        if (title) updatesData.title = title;
-        if (author) updatesData.author = author;
-        if (year) updatesData.year = year;
+        await user.destroy();
 
-        // Проверяем, есть ли что обновлять
-        if (Object.keys(updatesData).length === 0) {
-            return res.status(400).json({ message: 'No fields to update' });
-        }
-
-        await targetBook.update(updatesData);
-        res.status(201).json({ message: 'Book updated successfully', targetBook });
-    } catch (error) {
-        const errObj = new Error(error.message);
-        console.error("Error: ", errObj);
-        next(errObj);
+        res.send("User deleted successfully");
+    } catch(error) {
+        console.error(error)
+        next(error);
     }
 });
 
-app.delete("/books/:id", async(req, res, next) => {
-    const id = req.params.id;
+
+
+// {
+//     "username": "007killer2",
+//     "password": "123123"
+// }
+
+// {
+//     "mustChangePassword": true
+// }
+app.put("/togglePasswordStatus/:id", async(req, res, next) => {
+    const userId = parseInt(req.params.id);
+    const {mustChangePassword} = req.body;
     try {
-        const targetBook = await Book.findByPk(id);
-        if (!targetBook) {
-            return res.status(404).json({ message: 'Book not found' });
-        }
+        const user = await User.findByPk(userId);
+        if (!user) return res.status(404).send("User not found");
+        const updatedData = {};
 
-        await targetBook.destroy();
-        res.status(201).json({ message: 'Book successfully deleted', targetBook });
+        if (mustChangePassword) updatedData.mustChangePassword = mustChangePassword;
 
+        await user.update(updatedData);
+
+        res.status(201).json({
+            message: `Статус пароля для пользователя ${user.username} успешно изменен`,
+            mustChangePassword: user.mustChangePassword
+        });
     } catch (error) {
-        const errObj = new Error(error.message);
-        console.error("Error: ", errObj);
-        next(errObj);
+        next(error);
     }
 });
+
+
+
+app.get("/admin", checkUserRole, async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.json(users);
+    } catch (error) {
+        res.status(500).send("Ошибка при получении списка пользователей");
+        console.error("Error: ", error);
+    }
+})
+
 
 
 app.use((err, req, res, next) => {
@@ -118,11 +262,11 @@ fetch("http://localhost:3400/books", {
     .catch((error) => console.error(error));
 */
 
-app.listen(port, async () => {
+app.listen(PORT, async () => {
     try {
         await sequelizeInstance.authenticate();
         console.log('Connection has been established successfully');
-        console.log(`Server is running on: http://localhost:${port}`);
+        console.log(`Server is running on: http://localhost:${PORT}`);
     } catch (error) {
         console.error('Server Error:', error);
     }

@@ -59,15 +59,16 @@ app.get("/products/:id", async(req, res, next) => {
 app.post("/products", async(req, res, next) => {
     try {
         const db = getDB();
-        const {title, price} = req.body;
-        if (!title || !price) {
+        const {title, price, description} = req.body;
+        if (!title || !price || !description) {
             res.status(400).json({
-                message: "Пожалуйста, укажите название и цену продукта"
+                message: "Пожалуйста, укажите название, цену и описание продукта"
             });
         }
         const result = await db.collection("products").insertOne({
             title: title,
-            price: price
+            price: price,
+            description: description
         });
         console.log("Result: ", result);
         res.status(201).json(result);
@@ -81,7 +82,7 @@ app.post("/products", async(req, res, next) => {
 app.put("/products/:id", async(req, res, next) => {
     try {
         const id = req.params.id;
-        const {title, price} = req.body;
+        const {title, price, description} = req.body;
         const db = getDB();
         if (!id) {
             res.status(400).json({
@@ -105,6 +106,7 @@ app.put("/products/:id", async(req, res, next) => {
         const updatedData = {};
         if (title) updatedData.title = title;
         if (price) updatedData.price = price;
+        if (description) updatedData.description = description;
 
         const result = await db.collection("products").updateOne({ _id: new ObjectId(id)}, { $set: updatedData});
         res.json(result);

@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import {connectToDatabase} from "./config/db.js";
+import categoriesRouter from "./routes/categories.js";
+import productsRouter from "./routes/products.js";
 
 const app = express();
 const PORT = process.env.PORT || 3400;
@@ -12,6 +14,9 @@ async function startServer() {
         app.use(cors());
         app.use(express.json());
         app.use(express.urlencoded({ extended: true }));
+
+        app.use("/categories", categoriesRouter);
+        app.use("/products", productsRouter);
 
         app.get("/", (req, res) => {
             res.send("Hello World!");

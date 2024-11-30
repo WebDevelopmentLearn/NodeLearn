@@ -1,44 +1,48 @@
 import express from 'express';
-import cors from 'cors';
-import {connectToDatabase} from "./config/db.js";
-import categoriesRouter from "./routes/categories.js";
-import productsRouter from "./routes/products.js";
+import http from 'http';
+import {Server} from "socket.io";
+import "dotenv/config";
 
+const PORT = process.env.PORT || 3000;
 const app = express();
-const PORT = process.env.PORT || 3400;
+const server = http.createServer(app);
+const io = new Server(server);
 
-async function startServer() {
-    try {
-        await connectToDatabase();
+const messagesOfRooms = [];
 
-        app.use(cors());
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
 
-        app.use("/categories", categoriesRouter);
-        app.use("/products", productsRouter);
+app.get('/', (req, res) => {
+    res.send("Hello World");
+});
 
-        app.get("/", (req, res) => {
-            res.send("Hello World!");
-        });
+io.on("connection", (socket) => {
+    console.log(`User Connected: ${socket.id}`);
 
-        //TODO: Обработка ошибок
-        app.use((err, req, res, next) => {
-            console.error("Error: ", err);
-            res.status(500).send("Internal server error. Please see the logs for more details");
-        });
+    socket.on("join_room", (data) => {
+        socket.join(data);
+        console.log(`User with ID: ${socket.id} joined room: ${data}`);
 
-        app.listen(PORT, async() => {
-            try {
-                console.log(`Server is running at: http://localhost:${PORT}`);
-            } catch (error) {
-                console.error("Error: ", error);
-            }
-        });
-    } catch (error) {
-        console.error("Error: ", error);
-        throw error;
-    }
-}
+        const targetRoom = messagesOfRooms.filter((el) => {
+            return el.room === data;
+        })
+        console.log(targetRoom);
+        socket.emit("load_history", targetRoom);
+    });
 
-startServer();
+    socket.on("leave_room", (data) => {
+        socket.leave(data);
+        console.log(`User with ID: ${socket.id} left room: ${data}`);
+    });
+
+    socket.on("send_message", (data) => {
+        socket.to(data.room).emit("receive_message", data);
+        messagesOfRooms.push(data)
+        console.log(messagesOfRooms);
+    });
+});
+
+server.listen(PORT, () => {
+    console.log(`Server starting on http://localhost:${PORT}`);
+});

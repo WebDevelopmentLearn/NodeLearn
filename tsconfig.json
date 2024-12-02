@@ -1,0 +1,62 @@
+{
+  "compilerOptions": {
+    /* Основные настройки */
+    "target": "es6", /* Укажите версию JavaScript, в которую будет транслироваться код TypeScript (es5, es6, es2016, esnext и т.д.). */
+    "module": "commonjs", /* Укажите формат модулей (commonjs, esnext, amd, system, umd и т.д.). */
+    // "lib": ["esnext", "dom"],                      /* Укажите библиотеки, доступные в окружении (например, ES2015, DOM). */
+    // "allowJs": false,                              /* Разрешить включение JavaScript-файлов в проект. */
+    // "checkJs": false,                              /* Включить проверку типов для JavaScript-файлов. */
+    // "jsx": "react",                                /* Укажите, как обрабатывать JSX (react, react-jsx, preserve, или react-native). */
+    // "declaration": false,                          /* Генерировать .d.ts файлы для типов. */
+    // "declarationMap": false,                       /* Создавать sourcemap для файлов .d.ts. */
+    // "emitDeclarationOnly": false,                  /* Создавать только .d.ts файлы без генерации JavaScript. */
+    // "sourceMap": true,                             /* Генерировать sourcemaps для отладки. */
+    "outDir": "./dist", /* Укажите папку для скомпилированных файлов. */
+    "rootDir": "./src", /* Укажите корневую папку исходных файлов. */
+    // "removeComments": true,                        /* Удалять комментарии из скомпилированного кода. */
+    // "noEmit": false,                               /* Отключить генерацию JavaScript файлов. */
+    // "incremental": true,                           /* Включить инкрементальную компиляцию для ускорения. */
+    // "composite": false,                            /* Разрешить проекту быть частью ссылок (project references). */
+    /* Строгий режим проверки */
+    "strict": true, /* Включить строгий режим проверки типов. */
+    // "noImplicitAny": true,                         /* Запретить использование неявного типа 'any'. */
+    // "strictNullChecks": true,                      /* Проверять, что переменные не могут быть 'null' или 'undefined'. */
+    // "strictFunctionTypes": true,                   /* Убедиться, что типы функций совместимы. */
+    // "strictBindCallApply": true,                   /* Проверять типы для методов bind, call и apply. */
+    // "strictPropertyInitialization": true,          /* Проверять инициализацию свойств классов. */
+    // "noImplicitThis": true,                        /* Проверять, что 'this' имеет явный тип. */
+    // "useUnknownInCatchVariables": false,           /* Присваивать 'unknown' типу переменной в блоке catch. */
+    /* Модули */
+    // "moduleResolution": "node",                    /* Укажите стратегию разрешения модулей (classic или node). */
+    // "baseUrl": "./",                               /* Базовый каталог для разрешения путей модулей. */
+    // "paths": {                                     /* Укажите алиасы для модулей. */
+    //   "@components/*": ["src/components/*"],
+    //   "@utils/*": ["src/utils/*"]
+    // },
+    // "rootDirs": ["./src", "./tests"],              /* Укажите папки, которые считаются одним логическим корнем. */
+    // "typeRoots": ["./node_modules/@types"],        /* Укажите папки с определениями типов. */
+    // "types": ["node", "jest"],                     /* Укажите подключаемые типы. */
+    /* Эмиссия и отладка */
+    // "inlineSourceMap": false,                      /* Включить карты источников в файл JavaScript. */
+    // "inlineSources": false,                        /* Включить исходные файлы в карты источников. */
+    // "downlevelIteration": true,                    /* Поддержка корректных итераторов для старых версий JavaScript. */
+    // "importHelpers": true,                         /* Импортировать вспомогательные функции из tslib вместо дублирования. */
+    // "noEmitHelpers": false,                        /* Не генерировать вспомогательные функции в коде. */
+    /* Оптимизация и совместимость */
+    "esModuleInterop": true, /* Облегчить импорт CommonJS модулей. */
+    // "allowSyntheticDefaultImports": true,          /* Разрешить синтетические импорты для модулей без default-экспорта. */
+    // "preserveSymlinks": false,                     /* Использовать пути символических ссылок вместо их реального пути. */
+    "forceConsistentCasingInFileNames": true, /* Проверять, что регистр символов в путях файлов совпадает. */
+    /* Обработка ошибок */
+    // "noUnusedLocals": true,                        /* Сообщать об объявленных, но неиспользуемых переменных. */
+    // "noUnusedParameters": true,                    /* Сообщать об объявленных, но неиспользуемых параметрах функций. */
+    // "noImplicitReturns": true,                     /* Сообщать о функциях, где неявно отсутствует return. */
+    // "noFallthroughCasesInSwitch": true,            /* Сообщать, если в switch отсутствует break для case. */
+    /* Дополнительные параметры */
+    "skipLibCheck": true, /* Пропускать проверку типов для файлов .d.ts. */
+    // "isolatedModules": false,                      /* Убедиться, что каждый файл можно скомпилировать изолированно. */
+    // "resolveJsonModule": true                      /* Разрешить импорт JSON-файлов. */
+  },
+  "include": ["src/**/*"],                         /* Укажите файлы/папки, которые должны быть включены в проект. */
+  "exclude": ["node_modules", "**/*.spec.ts", "dist"]      /* Укажите файлы/папки, которые должны быть исключены из проекта. */
+}

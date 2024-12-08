@@ -1,71 +1,164 @@
-
 //TODO: Задание 1 START
-const calculateTotal = (price: number, quantity: number, discount: number = 0): number => {
-    return (price * quantity) - (price * quantity * discount / 100);
-}
-
-console.log(`calculateTotal(100, 2): ${calculateTotal(100, 2)}`); // 200
-console.log(`calculateTotal(100, 2, 10): ${calculateTotal(100, 2, 10)}`); // 180
+type Admin = {
+    name: string;
+    permissions: string[];
+};
+type User = {
+    name: string;
+    email: string;
+};
+type AdminUser = Admin & User;
+const adminUser: AdminUser = {
+    name: "Alice",
+    permissions: ["create", "delete"],
+    email: "Alice@gmail.com",
+};
+console.log(adminUser);
 //TODO: Задание 1 END
 
 
 //TODO: Задание 2 START
-let id: string | number;
-const displayId = (id: string | number): string | number => {
-    if (typeof id === 'string') {
-        return id.toUpperCase();
-    } else {
-        return id * 10;
+type Engine = {
+    type: string;
+    horsepower: number;
+}
+
+type Car = {
+    make: string;
+    model: string;
+    engine: Engine;
+    year?: number;
+}
+
+const printCarInfo = (car: Car): void => {
+    console.log(`
+    Car make: ${car.make}
+    Car mode: ${car.model}
+    Car Engine: Engine type: ${car.engine.type}
+                Engine horsepower: ${car.engine.horsepower}
+    ${car.year ? `Car year: ${car.year}` : ""}
+    `);
+}
+
+const bmwObj: Car = {
+    make: "BMW",
+    model: "X5",
+    engine: {
+        type: "dizel",
+        horsepower: 100
     }
 }
-console.log(`displayId('abc'): ${displayId('abc')}`); // ABC
-console.log(`displayId(123): ${displayId(123)}`); // 123
+
+const chevroletObj: Car = {
+    make: "Chevrolet",
+    model: "Camaro",
+    engine: {
+        type: "Unknown",
+        horsepower: 150
+    },
+    year: 2016,
+}
+
+printCarInfo(bmwObj);
+printCarInfo(chevroletObj);
 //TODO: Задание 2 END
 
 
 //TODO: Задание 3 START
-interface Order {
-    orderId: number,
-    amount: number,
-    status: "pending" | "shipped" | "delivered"
+type Product = {
+    name: string;
+    price: number;
 }
 
-const orders: Order[] = [
-    { orderId: 1, amount: 100, status: "pending" },
-    { orderId: 2, amount: 200, status: "shipped" },
-    { orderId: 3, amount: 300, status: "delivered" },
-    { orderId: 4, amount: 400, status: "pending" },
-    { orderId: 5, amount: 500, status: "shipped" },
-    { orderId: 6, amount: 600, status: "delivered" },
-    { orderId: 7, amount: 700, status: "pending" },
-    { orderId: 8, amount: 800, status: "shipped" },
-    { orderId: 9, amount: 900, status: "delivered" },
-    { orderId: 10, amount: 1000, status: "pending" }
-]
-
-const filterOrdersByStatus = (orders: Order[], status: "pending" | "shipped" | "delivered"): object[] => {
-    return orders.filter(order => order.status === status);
+interface CalculateDiscount {
+    (product: Product, discount: number): number
 }
 
-console.log(`filterOrdersByStatus(orders, 'pending'): ${JSON.stringify(filterOrdersByStatus(orders, 'pending'))}`);
+const product: Product = {
+    name: "Product",
+    price: 10
+}
+
+const calculateDiscount: CalculateDiscount = (product, discount)  => {
+    return product.price - discount;
+}
+
+console.log("calculateDiscount(product, 5): ", calculateDiscount(product, 5));
 //TODO: Задание 3 END
 
 
 //TODO: Задание 4 START
-let productInfo: [string, number, number] = ['Apple', 1, 100];
-interface Inventory {
-    name: string,
-    quantity: number,
+interface Employee {
+    name: string;
+    salary: number;
 }
 
-const updateStack = (inventory: Inventory, productInfo: [string, number, number]): Inventory => {
-    return {
-        name: productInfo[0],
-        quantity: inventory.quantity + productInfo[1]
+const employees: Employee[] = [
+    {
+        name: "John",
+        salary: 10,
+    },
+    {
+        name: "Alice",
+        salary: 16,
+    },
+    {
+        name: "Tom",
+        salary: 12,
+    },
+    {
+        name: "Merry",
+        salary: 18,
+    },
+    {
+        name: "Tony",
+        salary: 25,
     }
+]
+
+const getEmployeeSalary = (array: Employee[]): number[] => {
+    return array.map((el) => {
+        return el.salary;
+    });
 }
 
-const inventory = { name: 'Apple', quantity: 10 };
-console.log(`updateStack(inventory, productInfo): ${JSON.stringify(updateStack(inventory, productInfo))}`);
+console.log("getEmployeeSalary(employees): ", getEmployeeSalary(employees));
 //TODO: Задание 4 END
+
+
+//TODO: Задание 5 START
+interface Person {
+    firstName: string;
+    lastName: string;
+}
+
+interface Student extends Person{
+    grade: number;
+}
+
+const student: Student = {
+    firstName: "John",
+    lastName: "Doe",
+    grade: 15
+}
+
+const printStudent = (student: Student): void => {
+    console.log(`Name: ${student.firstName} ${student.lastName}\nGrade: ${student.grade}`);
+}
+
+printStudent(student);
+//TODO: Задание 5 END
+
+
+//TODO: Задание 6 START
+interface ConcatStrings {
+    (str1: string, str2: string): string;
+}
+
+const concatStrings: ConcatStrings = (str1, str2) => {
+    return str1 + str2;
+}
+
+console.log("concatStrings(\"Hello\", \"World!\"): ", concatStrings("Hello", "World!"));
+//TODO: Задание 6 END
 

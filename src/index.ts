@@ -1,164 +1,78 @@
 //TODO: Задание 1 START
-type Admin = {
-    name: string;
-    permissions: string[];
-};
-type User = {
-    name: string;
-    email: string;
-};
-type AdminUser = Admin & User;
-const adminUser: AdminUser = {
-    name: "Alice",
-    permissions: ["create", "delete"],
-    email: "Alice@gmail.com",
-};
-console.log(adminUser);
+console.log("//=============================//");
+console.log("Задание 1");
+const sumEvenNumbers = (arr: number[]): number => {
+    return arr.reduce((pv, cv) => {
+        return pv + cv;
+    }, 0);
+}
+
+const numbers: number[] = [1, 2, 3, 5, 10, 4, 2];
+console.log("sumEvenNumbers(numbers): ", sumEvenNumbers(numbers));
+console.log("//=============================//");
 //TODO: Задание 1 END
 
 
 //TODO: Задание 2 START
-type Engine = {
-    type: string;
-    horsepower: number;
+console.log("//=============================//");
+console.log("Задание 2");
+interface StringToBooleanFunction {
+    (str: string): boolean;
 }
 
-type Car = {
-    make: string;
-    model: string;
-    engine: Engine;
-    year?: number;
+const stringIsEmpty: StringToBooleanFunction = (str) => {
+    return str === "";
 }
 
-const printCarInfo = (car: Car): void => {
-    console.log(`
-    Car make: ${car.make}
-    Car mode: ${car.model}
-    Car Engine: Engine type: ${car.engine.type}
-                Engine horsepower: ${car.engine.horsepower}
-    ${car.year ? `Car year: ${car.year}` : ""}
-    `);
-}
-
-const bmwObj: Car = {
-    make: "BMW",
-    model: "X5",
-    engine: {
-        type: "dizel",
-        horsepower: 100
-    }
-}
-
-const chevroletObj: Car = {
-    make: "Chevrolet",
-    model: "Camaro",
-    engine: {
-        type: "Unknown",
-        horsepower: 150
-    },
-    year: 2016,
-}
-
-printCarInfo(bmwObj);
-printCarInfo(chevroletObj);
+console.log("stringIsEmpty(\"\"): ", stringIsEmpty(""));
+console.log("stringIsEmpty(\"Hello\"): ", stringIsEmpty("Hello"));
+console.log("//=============================//");
 //TODO: Задание 2 END
 
 
 //TODO: Задание 3 START
-type Product = {
-    name: string;
-    price: number;
+console.log("//=============================//");
+console.log("Задание 3");
+type CompareStrings = {
+    (str: string, str2: string): boolean;
 }
 
-interface CalculateDiscount {
-    (product: Product, discount: number): number
+const compareStrings: CompareStrings = (str, str2) => {
+    return str === str2;
 }
 
-const product: Product = {
-    name: "Product",
-    price: 10
-}
-
-const calculateDiscount: CalculateDiscount = (product, discount)  => {
-    return product.price - discount;
-}
-
-console.log("calculateDiscount(product, 5): ", calculateDiscount(product, 5));
+console.log("compareStrings(\"Hello\", \"World\"): ", compareStrings("Hello", "World"));
+console.log("compareStrings(\"Hello\", \"hello\"): ", compareStrings("Hello", "hello"));
+console.log("compareStrings(\"Hello\", \"Hello\"): ", compareStrings("Hello", "Hello"));
+console.log("//=============================//");
 //TODO: Задание 3 END
 
 
 //TODO: Задание 4 START
-interface Employee {
-    name: string;
-    salary: number;
+console.log("//=============================//");
+console.log("Задание 4");
+
+function getLastElement<T>(arr: T[]): T {
+    return arr[arr.length - 1];
 }
 
-const employees: Employee[] = [
-    {
-        name: "John",
-        salary: 10,
-    },
-    {
-        name: "Alice",
-        salary: 16,
-    },
-    {
-        name: "Tom",
-        salary: 12,
-    },
-    {
-        name: "Merry",
-        salary: 18,
-    },
-    {
-        name: "Tony",
-        salary: 25,
-    }
-]
+const names: string[] = ["Harry", "Samantha", "Kenny", "Lee", "Alvin", "Leon", "Clementine"];
 
-const getEmployeeSalary = (array: Employee[]): number[] => {
-    return array.map((el) => {
-        return el.salary;
-    });
-}
+console.log("getLastElement<string>(names): ", getLastElement<string>(names));
 
-console.log("getEmployeeSalary(employees): ", getEmployeeSalary(employees));
+console.log("//=============================//");
 //TODO: Задание 4 END
 
 
 //TODO: Задание 5 START
-interface Person {
-    firstName: string;
-    lastName: string;
+console.log("//=============================//");
+console.log("Задание 5");
+
+function makeTriple<T>(arg: T, arg2: T, arg3: T): T[] {
+    return [arg, arg2, arg3];
 }
 
-interface Student extends Person{
-    grade: number;
-}
+console.log("makeTriple<string>(\"Lee\", \"Clementine\", \"Kenny\"): ", makeTriple<string>("Lee", "Clementine", "Kenny"));
 
-const student: Student = {
-    firstName: "John",
-    lastName: "Doe",
-    grade: 15
-}
-
-const printStudent = (student: Student): void => {
-    console.log(`Name: ${student.firstName} ${student.lastName}\nGrade: ${student.grade}`);
-}
-
-printStudent(student);
+console.log("//=============================//");
 //TODO: Задание 5 END
-
-
-//TODO: Задание 6 START
-interface ConcatStrings {
-    (str1: string, str2: string): string;
-}
-
-const concatStrings: ConcatStrings = (str1, str2) => {
-    return str1 + str2;
-}
-
-console.log("concatStrings(\"Hello\", \"World!\"): ", concatStrings("Hello", "World!"));
-//TODO: Задание 6 END
-

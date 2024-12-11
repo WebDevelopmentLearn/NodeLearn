@@ -1,14 +1,42 @@
 //TODO: Задание 1 START
 console.log("//=============================//");
 console.log("Задание 1");
-const sumEvenNumbers = (arr: number[]): number => {
-    return arr.reduce((pv, cv) => {
-        return pv + cv;
-    }, 0);
+
+class Animal {
+    name: string;
+    species: string;
+    constructor(name: string, species: string) {
+        this.name = name;
+        this.species = species;
+    }
+
+    sound(): void {
+        console.log("The animal makes a sound");
+    }
 }
 
-const numbers: number[] = [1, 2, 3, 5, 10, 4, 2];
-console.log("sumEvenNumbers(numbers): ", sumEvenNumbers(numbers));
+class Dog extends Animal {
+    breed: string;
+    constructor(name: string, breed: string) {
+        super(name, "Dog");
+        this.breed = breed;
+    }
+
+    sound(): void {
+        console.log("The dog barks");
+    }
+}
+
+const animal = new Animal("Animal", "Unknown");
+console.log("animal: ", animal);
+animal.sound();
+
+console.log("");
+
+const dog = new Dog("Rex", "German Shepherd");
+console.log("dog: ", dog);
+dog.sound();
+
 console.log("//=============================//");
 //TODO: Задание 1 END
 
@@ -16,16 +44,24 @@ console.log("//=============================//");
 //TODO: Задание 2 START
 console.log("//=============================//");
 console.log("Задание 2");
-interface StringToBooleanFunction {
-    (str: string): boolean;
+
+class Library {
+    static totalBooks: number = 0;
+    constructor() {
+        Library.totalBooks++;
+    }
+
+    static addBook(): void {
+        Library.totalBooks++;
+    }
 }
 
-const stringIsEmpty: StringToBooleanFunction = (str) => {
-    return str === "";
+console.log("Library.totalBooks: ", Library.totalBooks);
+for (let i = 0; i < 10; i++) {
+    Library.addBook();
 }
+console.log("Library.totalBooks: ", Library.totalBooks);
 
-console.log("stringIsEmpty(\"\"): ", stringIsEmpty(""));
-console.log("stringIsEmpty(\"Hello\"): ", stringIsEmpty("Hello"));
 console.log("//=============================//");
 //TODO: Задание 2 END
 
@@ -33,46 +69,34 @@ console.log("//=============================//");
 //TODO: Задание 3 START
 console.log("//=============================//");
 console.log("Задание 3");
-type CompareStrings = {
-    (str: string, str2: string): boolean;
+class Vehicle {
+    make: string;
+    model: string;
+
+    constructor(make: string, model: string) {
+        this.make = make;
+        this.model = model;
+    }
+
 }
 
-const compareStrings: CompareStrings = (str, str2) => {
-    return str === str2;
+class Motorcycle extends Vehicle {
+    type: string;
+    constructor(make: string, model: string, type: string) {
+        super(make, model);
+        this.type = type;
+    }
 }
 
-console.log("compareStrings(\"Hello\", \"World\"): ", compareStrings("Hello", "World"));
-console.log("compareStrings(\"Hello\", \"hello\"): ", compareStrings("Hello", "hello"));
-console.log("compareStrings(\"Hello\", \"Hello\"): ", compareStrings("Hello", "Hello"));
+const vehicle = new Vehicle("Toyota", "Corolla");
+console.log("vehicle: ", vehicle);
+
+console.log("");
+
+const motorcycle = new Motorcycle("Yamaha", "FZ6", "Sport");
+console.log("motorcycle: ", motorcycle);
+
 console.log("//=============================//");
 //TODO: Задание 3 END
 
 
-//TODO: Задание 4 START
-console.log("//=============================//");
-console.log("Задание 4");
-
-function getLastElement<T>(arr: T[]): T {
-    return arr[arr.length - 1];
-}
-
-const names: string[] = ["Harry", "Samantha", "Kenny", "Lee", "Alvin", "Leon", "Clementine"];
-
-console.log("getLastElement<string>(names): ", getLastElement<string>(names));
-
-console.log("//=============================//");
-//TODO: Задание 4 END
-
-
-//TODO: Задание 5 START
-console.log("//=============================//");
-console.log("Задание 5");
-
-function makeTriple<T>(arg: T, arg2: T, arg3: T): T[] {
-    return [arg, arg2, arg3];
-}
-
-console.log("makeTriple<string>(\"Lee\", \"Clementine\", \"Kenny\"): ", makeTriple<string>("Lee", "Clementine", "Kenny"));
-
-console.log("//=============================//");
-//TODO: Задание 5 END

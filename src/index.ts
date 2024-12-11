@@ -51,18 +51,18 @@ class Library {
         Library.totalBooks++;
     }
 
-    static addBook(): void {
+    addBook(): void {
         Library.totalBooks++;
     }
 }
 
 console.log("Library.totalBooks: ", Library.totalBooks);
 for (let i = 0; i < 10; i++) {
-    Library.addBook();
+    const library = new Library();
+    library.addBook();
 }
-console.log("Library.totalBooks: ", Library.totalBooks);
 
-const library = new Library();
+
 console.log("Library.totalBooks: ", Library.totalBooks);
 
 console.log("//=============================//");

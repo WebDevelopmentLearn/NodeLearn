@@ -48,7 +48,6 @@ console.log("Задание 2");
 class Library {
     public static totalBooks: number = 0;
     constructor() {
-        Library.totalBooks++;
     }
 
     addBook(): void {

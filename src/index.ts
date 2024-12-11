@@ -3,8 +3,8 @@ console.log("//=============================//");
 console.log("Задание 1");
 
 class Animal {
-    name: string;
-    species: string;
+    public name: string;
+    public species: string;
     constructor(name: string, species: string) {
         this.name = name;
         this.species = species;
@@ -16,7 +16,7 @@ class Animal {
 }
 
 class Dog extends Animal {
-    breed: string;
+    public breed: string;
     constructor(name: string, breed: string) {
         super(name, "Dog");
         this.breed = breed;
@@ -46,7 +46,7 @@ console.log("//=============================//");
 console.log("Задание 2");
 
 class Library {
-    static totalBooks: number = 0;
+    public static totalBooks: number = 0;
     constructor() {
         Library.totalBooks++;
     }
@@ -62,6 +62,9 @@ for (let i = 0; i < 10; i++) {
 }
 console.log("Library.totalBooks: ", Library.totalBooks);
 
+const library = new Library();
+console.log("Library.totalBooks: ", Library.totalBooks);
+
 console.log("//=============================//");
 //TODO: Задание 2 END
 
@@ -70,8 +73,8 @@ console.log("//=============================//");
 console.log("//=============================//");
 console.log("Задание 3");
 class Vehicle {
-    make: string;
-    model: string;
+    public make: string;
+    public model: string;
 
     constructor(make: string, model: string) {
         this.make = make;
@@ -81,7 +84,7 @@ class Vehicle {
 }
 
 class Motorcycle extends Vehicle {
-    type: string;
+    public type: string;
     constructor(make: string, model: string, type: string) {
         super(make, model);
         this.type = type;

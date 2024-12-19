@@ -31,30 +31,23 @@ const thirdAsyncFunc = async(): Promise<string> => {
     });
 }
 
-const asyncFunc = async() => {
+const asyncFunc = async(): Promise<void> => {
     try {
         const result1 = await firstAsyncFunc();
-        console.log("result1: ", result1);
+        console.log("[asyncFunc] result1: ", result1);
 
         const result2 = await secondAsyncFunc();
-        console.log("result2: ", result2);
+        console.log("[asyncFunc] result2: ", result2);
 
         const result3 = await thirdAsyncFunc();
-        console.log("result3: ", result3);
+        console.log("[asyncFunc] result3: ", result3);
 
     } catch (error) {
-        console.error("Ошибка при обработке промисов в задании 1: ", error);
+        console.error("[asyncFunc] Ошибка при обработке промисов в задании 1: ", error);
     }
 }
 
-const resultAsyncFunc = asyncFunc().then(() => {
-    console.log("Задание 1 выполнено успешно");
-}).catch((error) => {
-    console.error("Ошибка при выполнении задания 1: ", error);
-}).finally(() => {
-    console.log("Задание 1 завершено");
-});
-console.log("asyncFunc(): ", resultAsyncFunc);
+asyncFunc()
 
 console.log("//=============================//");
 //TODO: Задание 1 END
@@ -64,33 +57,26 @@ console.log("//=============================//");
 console.log("//=============================//");
 console.log("Задание 2");
 
-const asyncFunc2 = async(arr: string[]) => {
-    const promisesArr: Promise<string>[] = [];
-    for (const item of arr) {
-        const result = await new Promise<string>((resolve, reject) => {
-            setTimeout(() => {
-                resolve(item.toUpperCase());
-            }, 1000);
-        });
-        console.log(result);
-        promisesArr.push(Promise.resolve(result));
+const asyncFunc2 = async(arr: string[]): Promise<void> => {
+    try {
+        const result = await Promise.all(arr.map(capitalizeString));
+        console.log("[asyncFunc2] Result: ", result);
+    } catch (error) {
+        console.error("[asyncFunc2] Error: ", error);
     }
-
-    const results = await Promise.all(promisesArr);
-    console.log("Results: ", results);
-    return results;
 }
 
-const arr = ["one", "two", "three"];
+const capitalizeString = (str: string): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
+        setTimeout(() => {
+            resolve(str.toUpperCase());
+        }, 1000);
+    })
+}
 
-const resultAsyncFunc2 = asyncFunc2(arr).then(() => {
-    console.log("Задание 2 выполнено успешно");
-}).catch((error) => {
-    console.error("Ошибка при выполнении задания 2: ", error);
-}).finally(() => {
-    console.log("Задание 3 завершено");
-});
-console.log("asyncFunc2(): ", resultAsyncFunc2);
+
+const arr = ["one", "two", "three"];
+asyncFunc2(arr);
 
 console.log("//=============================//");
 //TODO: Задание 2 END
@@ -100,7 +86,7 @@ console.log("//=============================//");
 console.log("//=============================//");
 console.log("Задание 3");
 
-const asyncFunc3 = async() => {
+const asyncFunc3 = async(): Promise<void> => {
     try {
         const firstPromise = new Promise<string>((resolve, reject) => {
             setTimeout(() => {
@@ -121,21 +107,14 @@ const asyncFunc3 = async() => {
         });
 
        const results = await Promise.all([firstPromise, secondPromise, thirdPromise]);
-       console.log("Results: ", results);
+       console.log("[asyncFunc3] Results: ", results);
     } catch (error) {
-        console.error("Ошибка при обработке промисов в задании 3: ", error);
+        console.error("[asyncFunc3] Ошибка при обработке промисов в задании 3: ", error);
     }
 
 }
 
-const resultAsyncFunc3 = asyncFunc3().then(() => {
-    console.log("Задание 3 выполнено успешно");
-}).catch((error) => {
-    console.error("Ошибка при выполнении задания 3: ", error);
-}).finally(() => {
-    console.log("Задание 3 завершено");
-});
-console.log("asyncFunc3(): ", resultAsyncFunc3);
+asyncFunc3();
 
 console.log("//=============================//");
 //TODO: Задание 3 END
@@ -145,7 +124,7 @@ console.log("//=============================//");
 console.log("//=============================//");
 console.log("Задание 4");
 
-const asyncFunc4 = async(arr: number[]) => {
+const asyncFunc4 = async(arr: number[]): Promise<void> => {
     const promisesArr: Promise<number>[] = [];
     for (const item of arr) {
         const result = await new Promise<number>((resolve, reject) => {
@@ -158,21 +137,13 @@ const asyncFunc4 = async(arr: number[]) => {
     }
 
     const results = await Promise.all(promisesArr);
-    console.log("Results: ", results);
-    return results;
+    console.log("[asyncFunc4] Results: ", results);
 };
 
 const arr4 = [1000, 2000, 3000];
 
 
-const resultAsyncFunc4 = asyncFunc4(arr4).then(() => {
-    console.log("Задание 4 выполнено успешно");
-}).catch((error) => {
-    console.error("Ошибка при выполнении задания 4: ", error);
-}).finally(() => {
-    console.log("Задание 4 завершено");
-});
-console.log("asyncFunc4(arr4): ", resultAsyncFunc4);
+asyncFunc4(arr4)
 
 console.log("//=============================//");
 //TODO: Задание 4 END

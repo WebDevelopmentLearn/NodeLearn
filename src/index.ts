@@ -184,15 +184,30 @@ abstract class Account {
 
 class SavingsAccount extends Account {
     private balance: number;
-    constructor(balance: number) {
+    private readonly interestRate: number; // Процентная ставка в процентах, например, 5 для 5%
+    constructor(balance: number, interestRate: number) {
         super();
         this.balance = balance;
+        this.interestRate = interestRate;
     }
+
+
+    applyInterest(): void {
+        this.balance += this.balance * (this.interestRate / 100);
+    }
+
     deposit(amount: number): number {
-        return this.balance += amount;
+        if (amount > 0) {
+            return this.balance += amount;
+        } else {
+            throw new Error("Сумма пополнения должна быть положительной.");
+        }
     }
 
     withdraw(amount: number): number {
+        if (amount > this.balance) {
+            throw new Error("Недостаточно средств на счете.");
+        }
         return this.balance -= amount;
     }
 
@@ -201,28 +216,40 @@ class SavingsAccount extends Account {
 
 class CheckingAccount extends Account {
     private balance: number;
-    constructor(balance: number) {
+    private readonly withdrawalFee: number;
+    constructor(balance: number, withdrawalFee: number) {
         super();
         this.balance = balance;
+        this.withdrawalFee = withdrawalFee;
     }
 
     deposit(amount: number): number {
-        return this.balance += amount;
+        if (amount > 0) {
+           return this.balance += amount;
+        } else {
+            throw new Error("Сумма пополнения должна быть положительной.");
+        }
     }
 
     withdraw(amount: number): number {
-        return this.balance -= amount;
+        const totalAmount = amount + this.withdrawalFee;
+        if (totalAmount > this.balance) {
+            throw new Error("Недостаточно средств на счете с учетом комиссии.");
+        }
+        return this.balance -= totalAmount;
     }
 }
 
-const savingsAccount = new SavingsAccount(1000);
+const savingsAccount = new SavingsAccount(1000, 5);
+console.log("savingsAccount: ", savingsAccount);
+savingsAccount.applyInterest();
 console.log("savingsAccount: ", savingsAccount);
 console.log("savingsAccount.deposit(10): ", savingsAccount.deposit(10));
 console.log("savingsAccount.withdraw(50): ", savingsAccount.withdraw(50));
 
 console.log("");
 
-const checkingAccount = new CheckingAccount(1000);
+const checkingAccount = new CheckingAccount(1000, 5);
 console.log("checkingAccount: ", checkingAccount);
 console.log("checkingAccount.deposit(10): ", checkingAccount.deposit(10));
 console.log("checkingAccount.withdraw(50): ", checkingAccount.withdraw(50));
